@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Rock Paper Scissors Game</title>
+    <link rel="stylesheet" href="styles2.css">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+
+    <div class="container">
+        <h1>Rock Paper Scissors</h1>
+        <div class="gesture-container">
+            <button onclick = "connectMetamask()">Connect Metamask Wallet</button>
+            <button onclick = "connectContract()">Connect to Smart Contract</button>
+        </div>
+        <div class="gesture-container">
+            <p id = "accountArea"></p>
+            <p id = "contractArea"></p>
+        </div>
+        <div class="input-container">
+            <label for="betAmount">Enter Bet Amount:</label>
+            <input type="number" id="betAmount" placeholder="Enter the amount">
+        </div>
+        <div class="gesture-container">
+            <div class="gesture" id="rock" onclick="chooseRock()">
+                <img src="rock-image.png" alt="Rock" width="40" height="40">
+                <span class="gesture-label">Rock</span>
+            </div>
+            <div class="gesture" id="paper" onclick="choosePaper()">
+                <img src="paper-image.png" alt="Paper" width="40" height="40">
+                <span class="gesture-label">Paper</span>
+            </div>
+            <div class="gesture" id="scissors" onclick="chooseScissors()">
+                <img src="scissors-image.png" alt="Scissors" width="40" height="40">
+                <span class="gesture-label">Scissors</span>
+            </div>
+        </div>
+        <div id="resultMessage" class="result"></div>
+    <button id="showHistoryButton">Show History</button>
+<div class="history-container hidden" id="historyContainer">
+</div>
+    <ul id="historyList">
+    </ul>
+</div>
+
+<script>
+    let account;
+    const connectMetamask = async () => {
+                if (window.ethereum !== "undefined") {
+                    const accounts = await ethereum.request({
+                        method: "eth_requestAccounts"
+                    });
+                    account = accounts[0];
+                    document.getElementById("accountArea").innerHTML = account;
+                }
+            }
+
+            const connectContract = async () => {
+                if (typeof window !== 'undefined') {
+                    const ABI = [
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "changeToPaper",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "changeToRock",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "changeToScissors",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "deposit",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAddress",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getBalance",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getPlayersChoose",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "playersChoose",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address payable",
+                "name": "_to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+];
+                    const Address = "0xa3E23216d968162e555EF382896EABc0F2d8E21A";
+                    window.web3 = await new Web3(window.ethereum);
+                    window.contract = await new window.web3.eth.Contract(ABI, Address);
+                    document.getElementById("contractArea").innerHTML = "connected to smart contract";
+                }
+            }
+
+            const readContract = async () => {
+                const dataPlayersChoose = await window.contract.methods.getPlayersChoose().call();
+                document.getElementById("dataArea").innerHTML = dataPlayersChoose;
+            }
+            const chooseRock = async() => {
+                await window.contract.methods.changeToRock().send({from:account});
+            }
+
+            const getContractAccount = async() => {
+                const dataGetAddress = await window.contract.methods.getAddress().call() / 1000000000000000000;
+                document.getElementById("contractAccount").innerHTML = `Contract account: ${dataGetAddress}`;
+            }
+
+            const getBalance = async() => {
+                const dataGetBalance = await window.contract.methods.getBalance().call();
+                document.getElementById("balanceArea").innerHTML = `Contract balance: ${dataGetBalance}`;
+            }
+
+            const depositContract = async() => {
+                const amount = document.getElementById("depositInput").value * 1000000000000000000;
+                await window.contract.methods.deposit().send({from: account, value: amount});
+            }
+
+            const withdraw = async() => {
+                const address = document.getElementById("addressInput").value;
+                const amount = document.getElementById("amountInput").value;
+                await window.contract.methods.withdraw(address, amount).send({from: account});
+            }
+        </script>
+</body>
+</html>

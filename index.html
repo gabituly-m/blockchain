@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Rock Paper Scissors Game</title>
+    <link rel="stylesheet" href="styles2.css">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles2.css" />
+</head>
+<body>
+    
+
+    <div class="container">
+        <h1>Rock Paper Scissors</h1>
+        <div class="gesture-container">
+            <button onclick = "connectMetamask()">Connect Metamask Wallet</button>
+            <button onclick = "connectContract()">Connect to Smart Contract</button>
+        </div>
+        <div>
+            <p id = "accountArea"></p>
+            <p id = "contractArea"></p>
+        </div>
+        <div class="input-container">
+            <button id = "anotherButton" onclick="getBalance()">Get balance of the contract</button>
+            <p id = "balanceArea"></p>
+            <button id = "anotherButton" onclick="depositContract()">Send ether to the contract</button>
+            <input type = "number" id = "depositInput" placeholder="Ether amount">
+            <button id = "anotherButton" onclick="withdraw()">Withdraw ether to any address</button>
+            <input type = "text" id = "addressInput" placeholder="Enter address"><br>
+            <input type = "number" id = "amountInput" placeholder = "Enter amount"><br>
+        <div class="input-container">
+            <label for="betAmount">Enter Bet Amount:</label>
+            <input type="number" id="betAmount" placeholder="Enter the amount">
+        </div>
+        <div class="gesture-container">
+            <button class="gesture" id="rock" onclick = "chooseRock()"><img src="/css/rock-image.png" alt="Rock" width="40" height="40"></button>
+            <button class="gesture" id="paper" onclick = "choosePaper()"><img src="/css/paper-image.png" alt="Paper" width="40" height="40"></button>
+            <button class="gesture" id="scissors" onclick = "chooseScissors()"><img src="/css/scissors-image.png" alt="Scissors" width="40" height="40"></button>
+         </div>
+        <div id="resultMessage" class="result"></div>
+    <ul id="historyList">
+    </ul>
+</div>
+
+<script src = "script.js"></script>
+</body>
+</html>
